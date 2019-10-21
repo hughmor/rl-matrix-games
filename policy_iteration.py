@@ -13,7 +13,7 @@ p2_rewards = [p_d.transpose(), -m_c, -r_p_s]
 
 def normalize(*args):
     t = sum(args)
-    return np.ma.array([arg/t for arg in args])
+    return np.array([arg/t for arg in args])
 
 
 def play_game(reward_matrix1, reward_matrix2, policy1, policy2):
@@ -26,16 +26,34 @@ def play_game(reward_matrix1, reward_matrix2, policy1, policy2):
     return (p1_action, p1_reward), (p2_action, p2_reward)
 
 
-def update_policy(p, a, r, mode=1):
-    p.mask = [False for _ in p]
+def update_policy(p, a, r, ALPHA, mode=1):
     if mode == 1:
-        p[a] += ALPHA * r * (1-p[a])
-        p.mask[a] = True
         p += -ALPHA * r * p
-        p.mask = False
     else:
-        p[a] += ALPHA * r * (1-p[a]) + ALPHA*(E-p[a])    # NOT IMPLEMENTED
-        p.mask[a] = True
         p += -ALPHA * r * p + ALPHA*(E-p[a])    # NOT IMPLEMENTED
-        p.mask = False
-    return normalize(p)
+    p[a] += ALPHA * r
+    return normalize(*p)
+
+
+def iterate(p1, p2, matrix1, matrix2, ALPHA=0.5, T=50000, alg=1):
+    p1_history = []
+    p2_history = []
+    for t in range(T):
+        print('Iteration {}'.format(t+1))
+        p1_history.append([*p1])
+        p2_history.append([*p2])
+        (a1, r1), (a2, r2) = play_game(matrix1, matrix2, p1, p2)
+        p1 = update_policy(p1, a1, r1, ALPHA, mode=alg)
+        p2 = update_policy(p2, a2, r2, ALPHA, mode=alg)
+    return p1_history, p2_history
+
+
+if __name__ == '__main__':
+    p1_r = p1_rewards[0]
+    p2_r = p2_rewards[0]
+
+    policy_1 = normalize(*np.random.random(2))
+    policy_2 = normalize(*np.random.random(2))
+
+    p1_history, p2_history = iterate(policy_1, policy_2, p1_r, p2_r)
+

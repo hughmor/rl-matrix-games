@@ -27,6 +27,7 @@ def play_game(reward_matrix1, reward_matrix2, policy1, policy2):
 
 
 def update_policy(p, a, r, mode=1):
+    p.mask = [False for _ in p]
     if mode == 1:
         p[a] += ALPHA * r * (1-p[a])
         p.mask[a] = True
@@ -38,33 +39,3 @@ def update_policy(p, a, r, mode=1):
         p += -ALPHA * r * p + ALPHA*(E-p[a])    # NOT IMPLEMENTED
         p.mask = False
     return normalize(p)
-
-
-T = 50000
-ALPHA = 0.5
-games = {'prisoners': 0,
-         'coins': 1,
-         'rps': 2
-         }
-
-game = games['prisoners']  # Choose Game Here
-alg = 1  # Choose Algorithm Here (1 or 2)
-
-
-def main():
-    p1_history = []
-    p2_history = []
-
-    policy_1 = normalize(*np.random.random(len(p1_rewards[game])))
-    policy_2 = normalize(*np.random.random(len(p2_rewards[game])))
-
-    for t in range(T):
-        p1_history.append([*policy_1])
-        p2_history.append([*policy_2])
-        (a1, r1), (a2, r2) = play_game(p1_rewards[game], p2_rewards[game], policy_1, policy_2)
-        policy_1 = update_policy(policy_1, a1, r1, mode=alg)
-        policy_2 = update_policy(policy_2, a2, r2, mode=alg)
-
-
-if __name__ == '__main__':
-    main()  # do policy iteration

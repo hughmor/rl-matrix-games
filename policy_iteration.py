@@ -19,7 +19,8 @@ def normalize(policy):
 
 
 def play_game(policy1, reward_matrix1, policy2, reward_matrix2):
-    assert len(reward_matrix1) == len(reward_matrix2) == len(policy1) == len(policy2), 'Size of policy arrays and rewards matrices do not match'
+    assert len(reward_matrix1) == len(reward_matrix2) == len(policy1) == len(policy2), \
+        'Size of policy arrays and rewards matrices do not match'
     n = len(reward_matrix1)
     p1_action = np.random.choice(n, p=policy1)
     p2_action = np.random.choice(n, p=policy2)
@@ -47,7 +48,7 @@ def iterate(policy1, reward_matrix1, policy2, reward_matrix2, alpha=0.005, max_i
         p2_history.append([*policy2])
         (a1, r1), (a2, r2) = play_game(policy1, reward_matrix1, policy2, reward_matrix2)
         policy1 = update_policy(policy1, a1, r1, learning_rate=alpha, mode=mode)
-        policy2 = update_policy(policy2, a2, r2, learning_rate=alpha, mode=mode)
+        policy2 = update_policy(policy2, a2, r2, learning_rate=alpha, mode=mode) # Doesn't capture final policy in history?
         if done_iterating:
             break
     return p1_history, p2_history

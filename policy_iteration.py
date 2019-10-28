@@ -110,6 +110,12 @@ def make_trajectory_plots(player1_history, player2_history, action_labels):
     else:
         raise NotImplementedError
     
+def statistics(p1_history, p2_history, labels):
+    p1_lie, p1_confess = zip(*p1_history)
+    p2_lie, p2_confess = zip(*p2_history)
+    print('Converged to probabilities of lying:\n\tPlayer 1:{}\n\tPlayer 2:{}\n'.format(p1_lie[-1], p2_lie[-1]))
+    print('Converged to probabilities of confessing:\n\tPlayer 1:{}\n\tPlayer 2:{}\n'.format(p1_confess[-1], p2_confess[-1]))
+    make_plots(p1_history, p2_history, labels)
 
 
 if __name__ == '__main__':

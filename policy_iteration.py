@@ -37,6 +37,8 @@ def play_game(policies, rewards):
 def update_policy(policy, action_taken, reward, learning_rate=0.005, expected_values=None, update_alg='standard', N=None):
     if expected_values is None:
         expected_values = [0 for _ in range(len(policy))]
+    #if update_alg == 'modified':
+    #    learning_rate = min(learning_rate, 5000*learning_rate/N)
     for action in range(len(policy)):
         if action is not action_taken:
             if update_alg == 'standard':

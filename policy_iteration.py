@@ -91,6 +91,7 @@ def make_plots(player1_history, player2_history, action_labels):
         subplot.set_title('Player ' + str(i+1))
         subplot.legend()
     figure.text(0.06, 0.5, 'Action Probability', ha='center', va='center', rotation='vertical')
+    plt.show()
     
 def make_trajectory_plots(player1_history, player2_history, action_labels):
     if len(action_labels) == 2:
@@ -113,11 +114,11 @@ def make_trajectory_plots(player1_history, player2_history, action_labels):
         raise NotImplementedError
     
 def statistics(p1_history, p2_history, labels):
+    make_plots(p1_history, p2_history, labels)
     p1_lie, p1_confess = zip(*p1_history)
     p2_lie, p2_confess = zip(*p2_history)
     print('Converged to probabilities of action 1:\n\tPlayer 1:{}\n\tPlayer 2:{}\n'.format(p1_lie[-1], p2_lie[-1]))
     print('Converged to probabilities of action 2:\n\tPlayer 1:{}\n\tPlayer 2:{}\n'.format(p1_confess[-1], p2_confess[-1]))    
-    make_plots(p1_history, p2_history, labels)
 
 
 if __name__ == '__main__':
